@@ -5,13 +5,9 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-
-# Copia apenas o arquivo do projeto para aproveitar melhor o cache.
-COPY ["src/Loteria.API.csproj", "."]
-RUN dotnet restore "Loteria.API.csproj"
-
-# Copia o restante dos arquivos e compila o projeto.
-COPY src/. .
+COPY ["Loteria.API.csproj", "."]
+RUN dotnet restore "./Loteria.API.csproj"
+COPY . .
 RUN dotnet build "Loteria.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
