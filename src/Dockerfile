@@ -9,8 +9,8 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
 # Copia apenas o arquivo do projeto primeiro, para aproveitar cache do Docker
-COPY ["Loteria.API.csproj", "/src/"]
-RUN dotnet restore "/src/Loteria.API.csproj"
+COPY ["Loteria.API.csproj", "/"]
+RUN dotnet restore "/Loteria.API.csproj"
 
 # Copia o restante do código para dentro do container
 COPY . .
