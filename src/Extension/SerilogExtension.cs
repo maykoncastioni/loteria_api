@@ -29,17 +29,9 @@ namespace Loteria.API.Extension
 
             try
             {
-                //Se for ambiente de desenvolvimento só loga no console
-                if (IsDevelopment)
-                {
-                    logCfg = logCfg.WriteTo.Async(
-                        wt => wt.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"));
-                }
-                else
-                {
-                    //logCfg = logCfg.WriteTo.Elasticsearch(ConfigureElasticSink(configuracao, enviromentName));
-                }
-
+                //Loga no console em todos os ambientes (necessário para Railway/containers capturarem stdout)
+                logCfg = logCfg.WriteTo.Async(
+                    wt => wt.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"));
             }
             catch { }
 

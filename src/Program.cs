@@ -21,16 +21,7 @@ namespace Loteria.API
             builder.Services.AddDbContext<LoteriaContext>(opt =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-                var retryPolicy = Policy.Handle<MySql.Data.MySqlClient.MySqlException>()
-                    .WaitAndRetry(new[]
-                    {
-                        TimeSpan.FromSeconds(1),
-                        TimeSpan.FromSeconds(2),
-                        TimeSpan.FromSeconds(3)
-                    });
-
-                retryPolicy.Execute(() => opt.UseMySQL(connectionString));
+                opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
 
             SerilogExtension.AddSerilogApi(builder.Configuration);

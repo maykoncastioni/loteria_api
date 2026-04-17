@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using MySql.EntityFrameworkCore.Metadata;
+using Pomelo.EntityFrameworkCore.MySql.Metadata;
 
 #nullable disable
 
@@ -13,14 +13,14 @@ namespace Loteria.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("MySQL:Charset", "utf8mb4");
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "LOTERIA",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", maxLength: 5, nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     LOTERIA = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
                     CONCURSO = table.Column<int>(type: "int", maxLength: 8, nullable: false),
                     RESULTADO = table.Column<string>(type: "longtext", nullable: false),
@@ -37,7 +37,7 @@ namespace Loteria.API.Migrations
                 {
                     table.PrimaryKey("ID", x => x.ID);
                 })
-                .Annotation("MySQL:Charset", "utf8mb4");
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LOTERIA_CONCURSO_LOTERIA",
