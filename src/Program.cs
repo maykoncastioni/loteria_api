@@ -26,7 +26,13 @@ namespace Loteria.API
 
             SerilogExtension.AddSerilogApi(builder.Configuration);
             builder.Host.UseSerilog(Log.Logger);
-            builder.Services.AddHttpClient<ILoteriaService, LoteriaService>();
+            builder.Services.AddHttpClient<ILoteriaService, LoteriaService>(client =>
+            {
+                // Caixa bloqueia requests sem User-Agent de browser
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+                client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+            });
             var app = builder.Build();
 
             app.UseSwagger();

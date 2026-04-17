@@ -19,18 +19,27 @@ namespace Loteria.API.Service
         public async Task<LoteriaDTO> ObterPelaLoteriaEConcurso(String Loteria, String Concurso)
         {
             String url = (!String.IsNullOrEmpty(Concurso) && Concurso.ToUpper() == Constantes.ULTIMO)  ? String.Concat(BASE_URL, Loteria) : String.Concat(BASE_URL, Loteria, "/", Concurso);
-            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(url);
-            _logger.LogInformation($"Resultado da loteria {Loteria} Concurso {Concurso} encontrado na API externa.");
-            if (httpResponseMessage.IsSuccessStatusCode)
+
+            try
             {
-                String Resposta = await httpResponseMessage.Content.ReadAsStringAsync();
+                HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(url);
 
-                LoteriaDTO dto = JsonConvert.DeserializeObject<LoteriaDTO>(Resposta);
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    String Resposta = await httpResponseMessage.Content.ReadAsStringAsync();
+                    _logger.LogInformation("Resultado da loteria {Loteria} concurso {Concurso} obtido na API externa (status {Status}).", Loteria, Concurso, (int)httpResponseMessage.StatusCode);
+                    return JsonConvert.DeserializeObject<LoteriaDTO>(Resposta);
+                }
 
-                return dto;
+                String corpo = await httpResponseMessage.Content.ReadAsStringAsync();
+                _logger.LogWarning("API externa da Caixa retornou status {Status} para {Url}. Corpo: {Corpo}", (int)httpResponseMessage.StatusCode, url, corpo);
+                return null;
             }
-
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao chamar API externa da Caixa em {Url}", url);
+                return null;
+            }
         }
     }
 }
